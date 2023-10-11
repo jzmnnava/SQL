@@ -1,4 +1,4 @@
-#The following queries contain information from the Customer and Order or BIT_DB file
+#The following queries contain information from the Customer and Order or BIT_DB file Which is provided in a different file as BIT_DB
 
 SELECT * FROM BIT_DB.customers LIMIT 20;
 
