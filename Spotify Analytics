@@ -1,0 +1,68 @@
+#For this project, I downloaded Spotify data from Kaggle.
+# Then I created a table to insert Spotify data into.
+# Finally, I performed analytics on the data using SQL. 
+
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+song_key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+song_mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness decimal(8,7) NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL )
+
+#Then I inserted the Spotify Data .csv into the table.
+
+#Next, I explored the data using the following SQL. 
+
+SELECT * FROM BIT_DB.Spotifydata;
+
+
+#First I searched up what are the top 10 tracks based on the popularity being over 80 and what was their avergae loudness 
+SELECT track_name, popularity,
+ROUND(AVG(loudness),2) AS Avg_Loudness
+FROM BIT_DB.Spotifydata
+WHERE popularity>80
+GROUP BY track_name
+LIMIT 10;
+
+#Then I explored what tracks have a danceability over 0.50 yet have the lowest energy
+SELECT track_name, 
+ROUND(danceability,2) AS Danceability,
+MIN(energy) AS Energy 
+FROM BIT_DB.Spotifydata
+WHERE danceability>0.50
+GROUP BY track_name
+LIMIT 20;
+
+#After I checked which artists have 2 or more tracks that have a popularity over 90
+SELECT artist_name, popularity, track_name, 
+COUNT(artist_name) AS Count
+FROM BIT_DB.Spotifydata
+WHERE popularity >90
+GROUP BY artist_name
+HAVING COUNT(artist_name)>1;
+
+#Lastly I looked over which songs are considered to be safe to use when preforming CPR. 
+#When the tempo is less than 100 it is "Slow"
+#When the tempo is in between 100 to 120 it is "Steady" or "Safe"
+#Anything remaining is classified as "Fast"
+SELECT track_name, tempo,
+CASE WHEN tempo<100 THEN "Slow"
+WHEN tempo<=120 THEN "Steady/Safe"
+ELSE "Fast" 
+END AS " CPR friendly"
+FROM BIT_DB.Spotifydata;
+
+
