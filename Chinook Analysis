@@ -1,0 +1,46 @@
+#This porject contains data from the Chinook Database which I anaylze the data
+
+#Dispay all the employees who were hired between the dates of 
+may 3rd 2003 to march 5th 2004 
+
+SELECT LastName, FirstName, HireDate
+FROM chinook.employees
+WHERE HireDate between '2003-05-03 00:00' AND '2004-03-05 00:00';
+
+#Provide the average bytes for the top 10 tracks with the highest average milliseconds
+
+WITH Top10Tracks AS (
+SELECT Name,
+AVG(Milliseconds) AS avg_milliseconds
+FROM tracks
+GROUP BY Name
+ORDER BY avg_milliseconds desc
+LIMIT 10
+)
+SELECT Name, AVG(Bytes) AS average_bytes
+FROM tracks
+WHERE Name IN (SELECT Name FROM Top10Tracks)
+GROUP BY Name;
+
+#Find the total amount for eac customer associated with Apple Inc., Google Inc., 
+or Microsoft Corporation 
+
+SELECT customers.FirstName, customers.LastName, customers.Company,
+SUM(invoices.Total) AS ToatalAmount
+FROM customers 
+RIGHT JOIN invoices 
+ON customers.Customerid= invoices.Customerid 
+WHERE customers.Company IN ('Apple Inc.', 'Google Inc.', 'Microsoft Corporation') 
+GROUP BY customers.Company, customers.FirstName, customers.LastName;
+
+#Display track names, media types, composers and label them as 
+'Common' or 'Rare' based on the specified genres 
+
+SELECT tracks.Name, tracks.MediaTypeid, tracks.Composer,
+CASE WHEN genres.name IN ('Pop','Hip Hop/Rap','R&B/Soul') THEN "Common"
+Else "rare"
+END AS MusicTaste
+FROM tracks 
+LEFT JOIN genres
+ON tracks.GenreId=genres.GenreId;
+
